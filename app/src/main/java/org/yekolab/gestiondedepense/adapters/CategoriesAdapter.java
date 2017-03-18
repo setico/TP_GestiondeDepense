@@ -3,11 +3,14 @@ package org.yekolab.gestiondedepense.adapters;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 
+import org.yekolab.gestiondedepense.MainActivity;
 import org.yekolab.gestiondedepense.R;
 import org.yekolab.gestiondedepense.data.DepenseDao;
 import org.yekolab.gestiondedepense.models.Categorie;
@@ -46,33 +49,18 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategorieViewHolder>
             @Override
             public boolean onLongClick(final View view) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                View view_dialog = LayoutInflater.from(view.getContext()).inflate(R.layout.delete_categorie_dialog,null,false);
-                builder.setView(view_dialog);
-                final AlertDialog alertDialog = builder.create();
-                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, view.getContext().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        DepenseDao depenseDao = new DepenseDao(view.getContext());
-                        depenseDao.deleteCategorie(categorie);
-                        categories.remove(categorie);
-                        notifyDataSetChanged();
-                        alertDialog.dismiss();
-
-                    }
-                });
-
-                alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, view.getContext().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        alertDialog.dismiss();
-
-                    }
-                });
-
-                alertDialog.show();
-
                 return true;
+            }
+        });
+        holder.select.setChecked(false);
+
+        holder.select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b)
+                    MainActivity.categories.add(categorie);
+                else
+                    MainActivity.categories.remove(categorie);
             }
         });
 

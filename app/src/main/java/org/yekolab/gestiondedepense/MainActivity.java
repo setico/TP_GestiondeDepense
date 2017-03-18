@@ -15,11 +15,14 @@ import org.yekolab.gestiondedepense.fragments.CategorieFragment;
 import org.yekolab.gestiondedepense.fragments.DepenseFragment;
 import org.yekolab.gestiondedepense.models.Categorie;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
+    public static ArrayList<Categorie> categories = new ArrayList<Categorie>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

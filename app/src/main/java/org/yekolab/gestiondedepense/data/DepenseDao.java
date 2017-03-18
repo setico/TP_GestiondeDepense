@@ -172,5 +172,22 @@ public class DepenseDao extends DbHelper {
                 new String[]{String.valueOf(depense.getId())});
     }
 
+    public void deleteCategories(ArrayList<Categorie> categories){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        try{
+            for(Categorie categorie:categories) {
+                db.delete(DepenseContract.CategorieEntry.TABLE_NAME,
+                        DepenseContract.CategorieEntry._ID + "=?",
+                        new String[]{String.valueOf(categorie.getId())});
+            }
+            db.setTransactionSuccessful();
+        }catch (Exception e){
+
+        }finally {
+            db.endTransaction();
+        }
+    }
+
 
 }

@@ -1,6 +1,8 @@
 package org.yekolab.gestiondedepense.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -9,10 +11,14 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import org.yekolab.gestiondedepense.MainActivity;
 import org.yekolab.gestiondedepense.R;
 import org.yekolab.gestiondedepense.adapters.CategoriesAdapter;
 import org.yekolab.gestiondedepense.data.DepenseDao;
@@ -34,7 +40,51 @@ public class CategorieFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_categorie,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_delete:
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View view_dialog = LayoutInflater.from(getActivity()).inflate(R.layout.delete_categorie_dialog,null,false);
+                builder.setView(view_dialog);
+                final AlertDialog alertDialog = builder.create();
+                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        depenseDao.deleteCategories(MainActivity.categories);
+                        categories.clear();
+                        for(Categorie categorie:depenseDao.getCategories())
+                        categories.add(categorie);
+                        categoriesAdapter.notifyDataSetChanged();
+                        MainActivity.categories.clear();
+                        alertDialog.dismiss();
+
+                    }
+                });
+
+                alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        alertDialog.dismiss();
+
+                    }
+                });
+
+                alertDialog.show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
     }
 
